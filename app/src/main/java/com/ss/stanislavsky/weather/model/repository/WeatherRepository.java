@@ -1,11 +1,12 @@
 package com.ss.stanislavsky.weather.model.repository;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
-import com.ss.stanislavsky.weather.model.CurrentWeather;
+import com.ss.stanislavsky.weather.model.data.CurrentWeather;
 import com.ss.stanislavsky.weather.model.retrofit.OpenWeatherMapApi;
 import com.ss.stanislavsky.weather.model.retrofit.RetrofitService;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +36,11 @@ public class WeatherRepository {
             @Override
             public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
                 currentWeather = response.body();
+
+                callback.onDataLoad(currentWeather);
+
+                Log.d("in WeatherRepository",
+                        currentWeather != null ? currentWeather.toString() : "currentWeather is null");
             }
 
             @Override
@@ -44,7 +50,7 @@ public class WeatherRepository {
             }
         });
 
-        callback.onDataLoad(currentWeather);
+
     }
 
     public interface OnDataLoadCallback {
