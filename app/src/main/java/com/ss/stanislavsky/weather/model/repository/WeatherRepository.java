@@ -1,9 +1,7 @@
 package com.ss.stanislavsky.weather.model.repository;
 
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.ss.stanislavsky.weather.model.data.CurrentWeather;
 import com.ss.stanislavsky.weather.model.retrofit.OpenWeatherMapApi;
 import com.ss.stanislavsky.weather.model.retrofit.RetrofitService;
@@ -35,25 +33,28 @@ public class WeatherRepository {
                 .enqueue(new Callback<CurrentWeather>() {
             @Override
             public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
-                currentWeather = response.body();
+                if (response.isSuccessful()) {
+                    currentWeather = response.body();
+                    callback.onDataLoad(currentWeather);
 
-                callback.onDataLoad(currentWeather);
+                    Log.d("Response body: ", currentWeather.toString());
+                } else {
+                    callback.onFailure(response.message());
 
-                Log.d("in WeatherRepository",
-                        currentWeather != null ? currentWeather.toString() : "currentWeather is null");
+                    Log.d("Error massage: ", response.message());
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<CurrentWeather> call, @NonNull Throwable t) {
-                currentWeather = null;
+                callback.onFailure(t.getMessage());
                 t.printStackTrace();
             }
         });
-
-
     }
 
     public interface OnDataLoadCallback {
         void onDataLoad(CurrentWeather currentWeather);
+        void onFailure(String errorMessage);
     }
 }

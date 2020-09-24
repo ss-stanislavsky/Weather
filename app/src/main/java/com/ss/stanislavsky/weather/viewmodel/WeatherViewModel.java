@@ -1,7 +1,7 @@
 package com.ss.stanislavsky.weather.viewmodel;
 
 import android.util.Log;
-import androidx.databinding.ObservableBoolean;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,27 +11,39 @@ import com.ss.stanislavsky.weather.model.repository.WeatherRepository;
 
 public class WeatherViewModel extends ViewModel {
     private WeatherRepository weatherRepository = WeatherRepository.getInstance();
-    private MutableLiveData<CurrentWeather> liveData = new MutableLiveData<>();
-    private final ObservableBoolean isLoading = new ObservableBoolean(false);
+    private MutableLiveData<CurrentWeather> currentWeatherLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
+    private MutableLiveData<String> toastMessageLiveData = new MutableLiveData<>();
 
-    public LiveData<CurrentWeather> getLiveData() {
-        return liveData;
+    public LiveData<CurrentWeather> getCurrentWeatherLiveData() {
+        return currentWeatherLiveData;
     }
-
-    public ObservableBoolean getIsLoading() {
+    public LiveData<Boolean> isLoading() {
         return isLoading;
+    }
+    public LiveData<String> getToastMessageLiveData() {
+        return toastMessageLiveData;
     }
 
     public void loadWeather() {
-        isLoading.set(true);
-        weatherRepository.getCurrentWeather((currentWeather) -> {
-                liveData.setValue(currentWeather);
-                isLoading.set(false);
+        isLoading.setValue(true);
+        weatherRepository.getCurrentWeather(new WeatherRepository.OnDataLoadCallback() {
+            @Override
+            public void onDataLoad(CurrentWeather currentWeather) {
+                currentWeatherLiveData.setValue(currentWeather);
+                isLoading.setValue(false);
 
                 Log.d("in WeatherViewModel LD:",
-                        liveData.getValue() != null ?
-                                liveData.getValue().toString() :
+                        currentWeatherLiveData.getValue() != null ?
+                                currentWeatherLiveData.getValue().toString() :
                                 "currentWeatherLiveData is null");
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                toastMessageLiveData.setValue(errorMessage);
+                isLoading.setValue(false);
+            }
         });
     }
 }

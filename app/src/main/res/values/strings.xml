@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="toast_get_data_error">Some error occurred while trying to get data from the server: %1$s</string>
+    <string name="feels_like">Feels like</string>
+    <string name="place">%1$s, %2$s</string>
+    <string name="image_description">Weather icon</string>
 </resources>

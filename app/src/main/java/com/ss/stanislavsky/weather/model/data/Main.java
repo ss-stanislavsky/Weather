@@ -30,11 +30,11 @@ public class Main {
     }
 
     public String getTempInCelsius() {
-        return String.valueOf(Math.round(temp - 273.15));
+        return String.valueOf(Math.round(temp - 273.15) + "\u00b0");
     }
 
     public String getFeelsLikeTempInCelsius() {
-        return String.valueOf(Math.round(feelsLike - 273.15));
+        return String.valueOf(Math.round(feelsLike - 273.15) + "\u00b0");
     }
 
     public void setTemp(double temp) {
