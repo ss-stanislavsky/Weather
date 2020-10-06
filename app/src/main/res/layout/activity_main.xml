@@ -5,155 +5,109 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".view.MainActivity">
 
-    <data>
-        <import type="android.view.View"/>
-
-        <variable
-            name="viewModel"
-            type="com.ss.stanislavsky.weather.viewmodel.WeatherViewModel" />
-
-        <variable
-            name="handler"
-            type="com.ss.stanislavsky.weather.view.BindingHandler" />
-    </data>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
-        android:background="@color/colorPrimaryAccent"
-        app:onRefreshListener="@{() -> handler.onWeatherLoad(viewModel)}"
-        app:refreshing="@{viewModel.isLoading}">
+        android:background="@color/colorPrimaryAccent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:foregroundGravity="center"
-            android:padding="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/country_tv"
-            app:layout_constraintStart_toStartOf="@+id/country_tv">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toTopOf="@id/description_tv"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/date_tv"
-                app:url='@{"https://openweathermap.org/img/wn/" + viewModel.liveData.weather[0].icon + "@2x.png"}' />
-
-
-            <TextView
-                android:id="@+id/date_tv"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text='@{viewModel.liveData.getFormattedDate}'
-                android:textSize="23sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/image"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/country_tv" />
+                android:foregroundGravity="center"
+                android:padding="16dp"
+                app:layout_constraintEnd_toStartOf="@+id/place_tv"
+                app:layout_constraintStart_toStartOf="@+id/place_tv">
 
-            <TextView
-                android:id="@+id/country_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{viewModel.liveData.name + ", " + viewModel.liveData.sys.country}'
-                android:textAllCaps="true"
-                android:textSize="23sp"
-                android:textStyle="bold|italic"
-                android:visibility="@{viewModel.liveData == null ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toTopOf="@id/date_tv"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/image_description"
+                    app:layout_constraintBottom_toTopOf="@id/description_tv"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/date_tv"/>
 
-            <TextView
-                android:id="@+id/description_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text='@{viewModel.liveData.weather[0].description}'
-                android:textSize="23sp"
-                android:textStyle="italic"
-                app:layout_constraintBottom_toTopOf="@id/temp_tv"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/image" />
+                <TextView
+                    android:id="@+id/date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/image"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/place_tv" />
 
-            <TextView
-                android:id="@+id/temp_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="bottom"
-                android:text='@{viewModel.liveData.main.getTempInCelsius + "\u00b0"}'
-                android:textSize="120sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/feels_like_tv"
-                app:layout_constraintTop_toBottomOf="@id/description_tv" />
+                <TextView
+                    android:id="@+id/place_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textSize="23sp"
+                    android:textStyle="bold|italic"
+                    app:layout_constraintBottom_toTopOf="@id/date_tv"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
 
-            <TextView
-                android:id="@+id/temp_feels_like_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{viewModel.liveData.main.getFeelsLikeTempInCelsius + "\u00b0"}'
-                android:textSize="30sp"
-                app:layout_constraintBottom_toTopOf="@+id/feels_like_tv"
-                app:layout_constraintLeft_toRightOf="@id/temp_tv"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/temp_tv"
-                app:layout_constraintVertical_bias="0.75" />
+                <TextView
+                    android:id="@+id/description_tv"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="23sp"
+                    android:textStyle="italic"
+                    app:layout_constraintBottom_toTopOf="@id/temp_tv"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/image" />
 
-            <TextView
-                android:id="@+id/feels_like_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Feels like"
-                app:layout_constraintBaseline_toBaselineOf="@+id/temp_tv"
-                app:layout_constraintLeft_toRightOf="@id/temp_tv"
-                app:layout_constraintRight_toRightOf="parent" />
+                <TextView
+                    android:id="@+id/temp_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="bottom"
+                    android:textSize="120sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/feels_like_tv"
+                    app:layout_constraintTop_toBottomOf="@id/description_tv" />
 
+                <TextView
+                    android:id="@+id/temp_feels_like_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
+                    app:layout_constraintBottom_toBottomOf="@id/feels_like_tv"
+                    app:layout_constraintLeft_toRightOf="@id/temp_tv"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/temp_tv"
+                    app:layout_constraintVertical_bias="0.75" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/feels_like_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feels_like"
+                    android:visibility="gone"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/temp_tv"
+                    app:layout_constraintLeft_toRightOf="@id/temp_tv"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
-
-<!--<TextView
-android:id="@+id/textview"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="@{weatherViewModel.currentWeatherLiveData.toString()}"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintLeft_toLeftOf="parent"
-app:layout_constraintRight_toRightOf="parent"
-app:layout_constraintTop_toTopOf="parent" />
-
-<Button
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Get weather"
-android:onClick="@{() -> handler.onWeatherLoad(weatherViewModel)}"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintLeft_toLeftOf="parent"
-app:layout_constraintRight_toRightOf="parent"
-app:layout_constraintTop_toBottomOf="@id/textview"
-app:layout_constraintVertical_bias="0.15" />-->
-
-<!--<ProgressBar
-android:layout_width="48dp"
-android:layout_height="48dp"
-android:indeterminate="true"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintLeft_toLeftOf="parent"
-app:layout_constraintRight_toRightOf="parent"
-app:layout_constraintTop_toTopOf="parent"
-android:visibility="@{weatherViewModel.isLoading ? View.VISIBLE : View.GONE}"/>-->
