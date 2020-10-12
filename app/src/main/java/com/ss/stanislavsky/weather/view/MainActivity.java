@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         initializeUI();
+
     }
 
     private void initializeUI() {
